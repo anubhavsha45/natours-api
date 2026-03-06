@@ -3,7 +3,10 @@ const fs = require('fs');
 const tourController = require('./../controllers/tourController');
 const router = express.Router();
 const authController = require('./../controllers/authController');
+const reviewRouter = require('./reviewRoutes');
 /* router.param('id', tourController.checkID); */
+
+router.use('/:tourId/reviews', reviewRouter);
 router
   .route('/top-5-cheap')
   .get(tourController.aliasTopTours, tourController.getTours);
@@ -23,4 +26,11 @@ router
     tourController.deleteTour,
   );
 
+/* router
+  .route('/:tourId/reviews')
+  .post(
+    authController.protect,
+    authController.restrictTo('user'),
+    reviewController.createReview,
+  ); */
 module.exports = router;
