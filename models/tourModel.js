@@ -125,7 +125,7 @@ tourSchema.virtual('durationInWeeks').get(function () {
 //virtual populate
 tourSchema.virtual('reviews', {
   ref: 'Review',
-  foreignField: 'tours',
+  foreignField: 'tour',
   localField: '_id',
 });
 //DOCUMENT MIDDLEWARE

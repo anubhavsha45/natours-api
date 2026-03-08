@@ -1,7 +1,29 @@
 const appError = require('../utils/appError');
+const multer = require('multer');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const factory = require('./buildFactory');
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/users');
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `user-${req.user.id}-${Date.now()}.${ext}`);
+  },
+});
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new appError('not an image!Please upload only images.', 400), false);
+  }
+};
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+exports.uploadUserPhoto = upload.single('photo');
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach((el) => {
@@ -38,6 +60,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
   //filter the req.body field
   const filteredObj = filterObj(req.body, 'name', 'email');
+  if (req.file) filteredObj.photo = req.file.filename;
   //update the  fields
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredObj, {
     new: true,
