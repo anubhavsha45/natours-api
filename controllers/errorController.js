@@ -9,15 +9,15 @@ const handleDuplicateFieldsDB = (err) => {
   return new appError(message, 400);
 };
 const handleValidationEror = (err) => {
-  const errors = Object.values(err.erros).map((el) => el.message);
+  const errors = Object.values(err.errors).map((el) => el.message);
   const message = `Invalid input data. ${errors.join('. ')}`;
   return new appError(message, 400);
 };
 const handleJWTError = () =>
   new appError('Invalid token!please login again', 401);
-const handleJWTExpriedError = () => {
+const handleJWTExpriedError = () =>
   new appError('Your token has expired!please login again', 401);
-};
+
 const sendErrDev = (err, req, res) => {
   if (req.originalUrl.startsWith('/api')) {
     return res.status(err.statusCode).json({

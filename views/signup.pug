@@ -1,0 +1,26 @@
+extends base
+
+block content
+  main.main
+    .login-form
+      h2.heading-secondary Sign up for Natours
+
+      form.form.form--signup
+        .form__group
+          label.form__label(for='name') Name
+          input.form__input#name(type='text', required)
+
+        .form__group
+          label.form__label(for='email') Email
+          input.form__input#email(type='email', required)
+
+        .form__group
+          label.form__label(for='password') Password
+          input.form__input#password(type='password', minlength='8', required)
+
+        .form__group
+          label.form__label(for='password-confirm') Confirm password
+          input.form__input#password-confirm(type='password', minlength='8', required)
+
+        .form__group
+          button.btn.btn--green Sign up

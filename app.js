@@ -12,6 +12,7 @@ const tourRoute = require('./routes/tourRoutes');
 const userRoute = require('./routes/userRoutes');
 const reviewRoute = require('./routes/reviewRoutes');
 const viewRoute = require('./routes/viewRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
 const appError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const app = express();
@@ -27,11 +28,22 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", 'https://cdn.jsdelivr.net'],
-      connectSrc: ["'self'", 'https://cdn.jsdelivr.net'],
-      imgSrc: ["'self'", 'data:', 'blob:'],
-      styleSrc: ["'self'", 'https:', "'unsafe-inline'"],
-      fontSrc: ["'self'", 'https:', 'data:'],
+
+      scriptSrc: [
+        "'self'",
+        'https://cdn.jsdelivr.net',
+        'https://js.stripe.com',
+      ],
+
+      connectSrc: [
+        "'self'",
+        'https://cdn.jsdelivr.net',
+        'https://api.stripe.com',
+      ],
+
+      frameSrc: ["'self'", 'https://js.stripe.com'],
+
+      imgSrc: ["'self'", 'data:', 'https://js.stripe.com'],
     },
   }),
 );
@@ -77,6 +89,7 @@ app.use('/', viewRoute);
 app.use('/api/v1/tours', tourRoute);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/reviews', reviewRoute);
+app.use('/api/v1/bookings', bookingRouter);
 
 //INVALID ROUTE
 app.all('*', (req, res, next) => {

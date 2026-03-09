@@ -2,6 +2,7 @@ extends base
 include _reviewCard
 
 block append head
+  script(src="https://js.stripe.com/v3/")
    
 mixin overviewBox(label,text,icon)
   .overview-box__detail
@@ -87,10 +88,21 @@ block content
       .cta__img.cta__img--logo
         img(src='/img/logo-white.png', alt='Natours logo')
 
-      img.cta__img.cta__img--1(src=`/img//tours/${tour.images[1]}`, alt='Tour picture')
-      img.cta__img.cta__img--2(src=`/img//tours/${tour.images[2]}`, alt='Tour picture')
+      img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt='Tour picture')
+      img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt='Tour picture')
 
       .cta__content
         h2.heading-secondary What are you waiting for?
         p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
-        button.btn.btn--green.span-all-rows Book tour now!
+        
+        if user
+          if booked
+            p.cta__text
+              | You have already booked this tour.
+              br
+              | Let's find another adventure for you!
+            a.btn.btn--green.btn--small(href='/') All Tours
+          else
+            button.btn.btn--green.btn--small#book-tour(data-tour-id=`${tour.id}`) Book Tour Now
+        else
+          a.btn.btn--green.span-all-rows(href='/login') Login to book tour
