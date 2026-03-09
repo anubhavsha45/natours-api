@@ -1,4 +1,5 @@
 node_modules/
+.cache
 config.env
 .env
 *.env
