@@ -39,12 +39,12 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
-  const url = `${req.protocol}://${req.get('host')}/me`;
-  try {
+  /* const url = `${req.protocol}://${req.get('host')}/me`;
+  /* try {
     await new Email(newUser, url).sendWelcome();
   } catch (err) {
     console.log('Email failed but user created');
-  }
+  } */
   //Sending the jsonwebtoken
   createSendToken(newUser, res, 201);
 });
