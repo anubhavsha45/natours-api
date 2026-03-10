@@ -15,6 +15,7 @@ const viewRoute = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const appError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
+const bookingController = require('./controllers/bookingController');
 const app = express();
 app.enable('trust proxy');
 app.set('view engine', 'pug');
@@ -53,6 +54,12 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 //BODY PARSER||READING DATAA FROM REQ.BODY
+
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout,
+);
 app.use(express.json({ limit: '10kb' }));
 app.use(cookieParser());
 
