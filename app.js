@@ -25,6 +25,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 //SECUIRTY HTTP HEADERS
+app.use(helmet());
+
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -40,11 +42,16 @@ app.use(
         "'self'",
         'https://cdn.jsdelivr.net',
         'https://api.stripe.com',
+        'https://m.stripe.network',
       ],
 
-      frameSrc: ["'self'", 'https://js.stripe.com'],
+      frameSrc: [
+        "'self'",
+        'https://js.stripe.com',
+        'https://checkout.stripe.com',
+      ],
 
-      imgSrc: ["'self'", 'data:', 'https://js.stripe.com'],
+      imgSrc: ["'self'", 'data:', 'https://*.stripe.com'],
     },
   }),
 );

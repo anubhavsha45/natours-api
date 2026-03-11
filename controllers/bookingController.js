@@ -1,15 +1,25 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const Tour = require('./../models/tourModel');
-const catchAsync = require('./../utils/catchAsync');
-const Booking = require('./../models/bookingModel');
-const User = require('./../models/userModel');
+
+const Tour = require('../models/tourModel');
+const User = require('../models/userModel');
+const Booking = require('../models/bookingModel');
+
+const catchAsync = require('../utils/catchAsync');
+const factory = require('./handlerFactory');
+
+////////////////////////////////////////////////
+// CREATE STRIPE CHECKOUT SESSION
+////////////////////////////////////////////////
+
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
-  // 1) Get the currently booked tour
+  // 1) Get tour
   const tour = await Tour.findById(req.params.tourId);
 
-  // 2) Create checkout session
+  // 2) Create Stripe checkout session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
+
+    mode: 'payment',
 
     success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
 
@@ -19,24 +29,30 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
     client_reference_id: req.params.tourId,
 
+    metadata: {
+      price: tour.price,
+    },
+
     line_items: [
       {
         price_data: {
           currency: 'usd',
-          unit_amount: tour.price * 100,
+
           product_data: {
             name: `${tour.name} Tour`,
             description: tour.summary,
+
             images: [
               `${req.protocol}://${req.get('host')}/img/tours/${tour.imageCover}`,
             ],
           },
+
+          unit_amount: tour.price * 100,
         },
+
         quantity: 1,
       },
     ],
-
-    mode: 'payment',
   });
 
   // 3) Send session to client
@@ -46,20 +62,29 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   });
 });
 
+////////////////////////////////////////////////
+// CREATE BOOKING AFTER SUCCESSFUL PAYMENT
+////////////////////////////////////////////////
+
 const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
 
-  const user = (
-    await User.findOne({
-      email: session.customer_email,
-    })
-  ).id;
+  const user = (await User.findOne({ email: session.customer_email })).id;
 
-  const price = session.amount_total / 100;
+  const price = session.metadata.price;
 
-  await Booking.create({ tour, user, price });
+  await Booking.create({
+    tour,
+    user,
+    price,
+  });
 };
-exports.webhookCheckout = async (req, res, next) => {
+
+////////////////////////////////////////////////
+// STRIPE WEBHOOK
+////////////////////////////////////////////////
+
+exports.webhookCheckout = async (req, res) => {
   const signature = req.headers['stripe-signature'];
 
   let event;
@@ -71,15 +96,22 @@ exports.webhookCheckout = async (req, res, next) => {
       process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch (err) {
-    console.log(`Webhook error: ${err.message}`);
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
 
-  // When payment succeeds
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    await createBookingCheckout(session);
+    await createBookingCheckout(event.data.object);
   }
 
   res.status(200).json({ received: true });
 };
+
+////////////////////////////////////////////////
+// CRUD BOOKINGS
+////////////////////////////////////////////////
+
+exports.createBooking = factory.createOne(Booking);
+exports.getBooking = factory.getOne(Booking);
+exports.getAllBookings = factory.getAll(Booking);
+exports.updateBooking = factory.updateOne(Booking);
+exports.deleteBooking = factory.deleteOne(Booking);
