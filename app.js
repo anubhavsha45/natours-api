@@ -27,35 +27,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //SECUIRTY HTTP HEADERS
 app.use(helmet());
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-
-      scriptSrc: [
-        "'self'",
-        'https://cdn.jsdelivr.net',
-        'https://js.stripe.com',
-      ],
-
-      connectSrc: [
-        "'self'",
-        'https://cdn.jsdelivr.net',
-        'https://api.stripe.com',
-        'https://m.stripe.network',
-      ],
-
-      frameSrc: [
-        "'self'",
-        'https://js.stripe.com',
-        'https://checkout.stripe.com',
-      ],
-
-      imgSrc: ["'self'", 'data:', 'https://*.stripe.com'],
-    },
-  }),
-);
-
 //DEVELOPMENT LOGGING
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
