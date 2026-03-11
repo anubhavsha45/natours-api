@@ -1323,3 +1323,151 @@ body {
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
 }
+/* ============================= */
+/* TABLET RESPONSIVE (≤1024px) */
+/* ============================= */
+@media (max-width: 64em) {
+  html {
+    font-size: 56%;
+  }
+
+  body {
+    padding: 1.5rem;
+  }
+
+  .main {
+    padding: 6rem 3rem;
+  }
+
+  .card-container {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 4rem;
+  }
+
+  .section-description {
+    flex-direction: column;
+  }
+
+  .section-description > * {
+    flex: 1 1 100%;
+    padding: 6rem 5vw;
+  }
+
+  .cta {
+    padding: 7rem 4rem 7rem 18rem;
+  }
+
+  .heading-primary {
+    font-size: 4rem;
+    width: 90%;
+  }
+
+  .heading-tertirary {
+    font-size: 2.2rem;
+  }
+}
+/* ============================= */
+/* MOBILE RESPONSIVE (≤768px) */
+/* ============================= */
+@media (max-width: 48em) {
+  html {
+    font-size: 52%;
+  }
+
+  .header {
+    flex-direction: column;
+    height: auto;
+    padding: 2rem;
+  }
+
+  .nav {
+    flex-direction: column;
+  }
+
+  .nav__el {
+    margin-bottom: 1rem;
+  }
+
+  .heading-primary {
+    font-size: 3.2rem;
+    width: 100%;
+  }
+
+  .heading-box {
+    top: 40%;
+    width: 90%;
+  }
+
+  .card-container {
+    grid-template-columns: 1fr;
+  }
+
+  .section-pictures {
+    flex-direction: column;
+  }
+
+  .cta {
+    padding: 6rem 3rem;
+  }
+
+  .cta__content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .cta__img {
+    display: none;
+  }
+}
+/* ============================= */
+/* SMALL PHONES (≤480px) */
+/* ============================= */
+@media (max-width: 30em) {
+  html {
+    font-size: 50%;
+  }
+
+  body {
+    padding: 1rem;
+  }
+
+  .main {
+    padding: 4rem 2rem;
+  }
+
+  .card-container {
+    grid-gap: 3rem;
+  }
+
+  .heading-secondary {
+    font-size: 2rem;
+  }
+
+  .heading-primary {
+    font-size: 2.8rem;
+  }
+}
+/* Fix account page for mobile */
+@media (max-width: 48em) {
+  .user-view {
+    flex-direction: column;
+  }
+
+  .user-view__menu {
+    flex: none;
+    width: 100%;
+  }
+
+  .user-view__content {
+    width: 100%;
+    padding: 4rem 2rem;
+  }
+
+  .user-view__form-container {
+    padding: 0 2rem;
+  }
+
+  .side-nav a {
+    padding: 1rem 2rem;
+  }
+}
