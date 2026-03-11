@@ -21,7 +21,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
     mode: 'payment',
 
-    success_url: `${req.protocol}://${req.get('host')}/my-tours?alert=booking`,
+    success_url: `${req.protocol}://${req.get('host')}/my-tours/?tour=${
+      req.params.tourId
+    }&user=${req.user.id}&price=${tour.price}`,
 
     cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
 
@@ -66,19 +68,15 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 // CREATE BOOKING AFTER SUCCESSFUL PAYMENT
 ////////////////////////////////////////////////
 
-const createBookingCheckout = async (session) => {
-  const tour = session.client_reference_id;
+exports.createBookingCheckout = catchAsync(async (req, res, next) => {
+  const { tour, user, price } = req.query;
 
-  const user = (await User.findOne({ email: session.customer_email })).id;
+  if (!tour || !user || !price) return next();
 
-  const price = session.metadata.price;
+  await Booking.create({ tour, user, price });
 
-  await Booking.create({
-    tour,
-    user,
-    price,
-  });
-};
+  res.redirect(req.originalUrl.split('?')[0]);
+});
 
 ////////////////////////////////////////////////
 // STRIPE WEBHOOK
