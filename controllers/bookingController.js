@@ -5,7 +5,7 @@ const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 
 const catchAsync = require('../utils/catchAsync');
-const factory = require('./handlerFactory');
+const factory = require('./buildFactory');
 
 ////////////////////////////////////////////////
 // CREATE STRIPE CHECKOUT SESSION
