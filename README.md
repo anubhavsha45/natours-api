@@ -8,7 +8,7 @@
 🧪 Test Credentials
 You can use the following credentials to explore the application:
 Email: Leo@example.com
-Password: Test1234
+Password: test1234
 
 ---
 
