@@ -5,6 +5,13 @@
 
 ---
 
+🧪 Test Credentials
+You can use the following credentials to explore the application:
+Email: Leo@example.com
+Password: Test1234
+
+---
+
 ## 📌 Overview
 
 **Natours** is a full-stack tour booking web application that allows users to explore, book, and review tours around the world. It includes authentication, tour management, booking functionality, and secure payments.
